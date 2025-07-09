@@ -1,26 +1,219 @@
 ---
 title: "01_plots"
 author: "Albert Tafur Rangel"
-format: html
+format:
+  html:
+    embed-resources: true
 ---
 
 ## Plots
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+“Data visualization means drawing graphic displays to show data”
 
-## Running Code
+Antony Unwin, 2020.
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Basic plot
 
-```{r}
-1 + 1
-```
+R has some functions by default in the base package.
 
-You can add options to executable code like this 
+The `plot()` function is used to draw points (markers) in a diagram. The function takes parameters for specifying points in the diagram. Parameter 1 specifies points on the x-axis. Parameter 2 specifies points on the y-axis. At its simplest, you can use the `plot()` function to plot two numbers against each other:
 
 ```{r}
-#| echo: false
-2 * 2
+
+# One point
+plot(1, 3)              
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Let's try two coordinates
+
+```{r}
+
+# Two points
+plot(c(1, 8), c(3, 10)) 
+
+```
+
+However, this is can be challengue to understand what is inside the plot function. So, let's create a variable to make the code human readable
+
+```{r}
+
+# Define x axis values
+x <- c(1, 8)
+
+# Define y axis values
+y <- c(3, 10)
+
+# Plot the points
+plot(x, y)
+
+```
+
+## Graph design with ggplot
+
+-   … is an R package to visualize data created by Hadley Wickham in 2005.
+
+-   … is part of the tidyverse collection, which was designed for data science.
+
+-   … is citable, please do it when use it.
+
+-   allows link variables by only using “+”
+
+Before to start, ggplot package need to be installed.
+
+```{r}
+
+# install.packages("ggplot2")
+# install.packages("tidyverse")
+
+# Load the ggplot library
+library(ggplot2)
+
+```
+
+### The grammar of ggplot
+
+| Function       | Description                                                |
+|-------------------|-----------------------------------------------------|
+| `ggplot(data)` | The raw data that you want to visualise                    |
+| `aes(data)`    | Aesthetic mappings between variables and visual properties |
+| `geom_*()`     | The geometric shapes representing the data                 |
+| `stats_*()`    | The statistical transformations applied to the data        |
+| `scale_*()`    | Maps between the data and the aesthetic dimensions         |
+| `coord_*()`    | Maps data into the plane of the data rectangle             |
+| `facet_*()`    | The arrangement of the data into a grid of plots           |
+| `theme_*()`    | The overall visual defaults of a plot                      |
+
+Let's try. First, use only `ggplot()`
+
+```{r}
+
+# Use the DNase dataset available in R base package
+ggplot(data = DNase)
+
+```
+
+Which is the result?
+
+Now, let's add a new function. Use "+" in the same line, and after press "enter" key
+
+```{r}
+
+# Use the DNase dataset available in R base package
+ggplot(data = DNase) +
+  aes(x= density, y = conc)
+
+```
+
+Still you cannot see the a proper plot, there are axis, but the points in a coordinate does not exits. Let's add them.
+
+```{r}
+
+# Use the DNase dataset available in R base package
+ggplot(data = DNase) +
+  aes(x= density, y = conc) +
+  geom_point()
+
+```
+
+Now, we have a plot but is does not communicate too much. Let's add some colors, change the shape, the size, etc.
+
+```{r}
+
+# Use the DNase dataset available in R base package
+ggplot(data = DNase) +
+  aes(x= density, y = conc) +
+  geom_point(color = "#28a87d",
+             alpha = .5,
+             shape = "o",
+             stroke = 1,
+             size = 4)
+
+```
+
+Much better, isn't it? but can we make it more communicable? Let's check the data, to explore a new variable.
+
+```{r}
+
+head(DNase)
+
+```
+
+The dataset has another variable named Run, which indicates the assay Run. So, let's use this to adjust the color
+
+```{r}
+
+# Use the DNase dataset available in R base package
+ggplot(data = DNase) +
+  aes(x= density, y = conc) +
+  geom_point(color = DNase$Run,
+             alpha = .5,
+             shape = "o",
+             stroke = 1,
+             size = 4)
+
+```
+
+Nice! Now, you have some color which grouped the data by assay run. But, that's not the best way to access to Run variable, we can use `aes()`
+
+```{r}
+
+# Use the DNase dataset available in R base package
+ggplot(data = DNase) +
+  aes(x= density, y = conc) +
+  geom_point(aes(color = Run),
+             alpha = .5,
+             shape = "o",
+             stroke = 1,
+             size = 4)
+
+```
+
+Better, isn't it ? Now you even visualize a legend. Nevertheless, there is better way to write and optimize the code, we already have an `aes()`, so move `color = Run` to there.
+
+```{r}
+
+# Use the DNase dataset available in R base package
+ggplot(data = DNase) +
+  aes(x= density, y = conc, color = Run) +
+  geom_point(alpha = .5,
+             shape = "o",
+             stroke = 1,
+             size = 4)
+
+```
+
+Same results, better coding practices. You can still use the same data to add some geometric shapes that can help to you plot communication. Try `geom_line()`
+
+```{r}
+
+# Use the DNase dataset available in R base package
+ggplot(data = DNase) +
+  aes(x= density, y = conc, color = Run) +
+  geom_point(alpha = .5,
+             shape = "o",
+             stroke = 1,
+             size = 4) +
+  geom_line()
+
+```
+
+You can now visualy follow the same run acrros de density increases in x-axis and concentration in y-axis
+
+Additionally, you can store the plot as a variable.
+
+```{r}
+
+my_plot <- ggplot(data = DNase) +
+ aes(x = density,
+     y = conc,
+     color = Run) +
+ geom_point(alpha = .5,
+            shape = "X",
+            stroke = 1,
+            size = 4) +
+ geom_line()
+
+```
+
+As you can see the a new variable named "my_plot" was created.

@@ -6,21 +6,140 @@ format: html
 
 ## Color and visual aesthetics
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+“Data visualization means drawing graphic displays to show data”
 
-## Running Code
+Antony Unwin, 2020.
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Recap
 
-```{r}
-1 + 1
-```
-
-You can add options to executable code like this 
+In the last module we end saying: "you can store the plot as a variable"
 
 ```{r}
-#| echo: false
-2 * 2
+
+my_plot <- ggplot(data = DNase) +
+ aes(x = density,
+     y = conc,
+     color = Run) +
+ geom_point(alpha = .5,
+            # shape = "x",
+            stroke = 1,
+            size = 4) +
+ geom_line()
+
+my_plot
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Now, let's polish the plot. Change the axis name to be more descriptive and add a title.
+
+```{r}
+
+my_plot +
+ labs(x = "Optical density 400nm",
+      y = "Protein concentration",
+      title = "ELISA assay for the recombinant protein DNase in rat serum")
+
+```
+
+We make some improvement. What about change the legend name and add a tag. A tag is very useful in scientific publications to create a panel.
+
+```{r}
+
+my_plot +
+ labs(x = "Optical density 400nm",
+      y = "Protein concentration",
+      title = "ELISA assay for the recombinant protein DNase in rat serum",
+      color = "Assay run",
+      tag = "a.")
+
+```
+
+Good job! A last adjusment, change the theme. I like too much the minimal theme.
+
+```{r}
+
+my_plot +
+ labs(x = "Optical density 400nm",
+      y = "Protein concentration",
+      title = "ELISA assay for the recombinant protein DNase in rat serum",
+      color = "Assay run",
+      tag = "a.") +
+  theme_minimal()
+
+```
+
+Did it improve? I think yes. But make it sense to have concentration in y-axis? which is the measured variable?
+
+```{r}
+
+ggplot(data = DNase) +
+  aes(x = conc,
+      y = density,
+      color = Run) +
+  geom_point(alpha = .5,
+             # shape = "x",
+             stroke = 1,
+             size = 4) +
+  geom_line() +
+  labs(x = "Protein concentration",
+       y = "Optical density 400nm",
+       title = "ELISA assay for the recombinant protein DNase in rat serum",
+       color = "Assay run",
+       tag = "a.") +
+  theme_minimal()
+
+```
+
+What a change!
+
+Finally, let's play a little bit with the color. But to use some color palettes a new package need to installed. After, load it.
+
+```{r}
+
+# install.packages("RColorBrewer")
+library(RColorBrewer)
+  
+ggplot(data = DNase) +
+  aes(x = conc,
+      y = density,
+      color = Run) +
+  geom_point(alpha = .5,
+             # shape = "x",
+             stroke = 1,
+             size = 4) +
+  geom_line() +
+  scale_color_brewer(palette = "Spectral") +
+  labs(x = "Protein concentration",
+       y = "Optical density 400nm",
+       title = "ELISA assay for the recombinant protein DNase in rat serum",
+       color = "Assay run",
+       tag = "a.") +
+  theme_minimal()
+
+```
+
+Have you notice that legends are not ordered? Let's adjust it.
+
+```{r}
+
+DNase$Run <- factor(DNase$Run, levels = as.character(1:11))
+
+ggplot(data = DNase) +
+  aes(x = conc,
+      y = density,
+      color = Run)+
+  geom_point(alpha = .5,
+             # shape = "x",
+             stroke = 1,
+             size = 4) +
+  geom_line() +
+  scale_color_brewer(palette = "Spectral") +
+  labs(x = "Protein concentration",
+       y = "Optical density 400nm",
+       title = "ELISA assay for the recombinant protein DNase in rat serum",
+       color = "Assay run",
+       tag = "a.") +
+  theme_minimal()
+
+```
+

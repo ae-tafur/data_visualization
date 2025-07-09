@@ -6,21 +6,57 @@ format: html
 
 ## Design a project
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+The purpose of this module is create a plot
 
-## Running Code
+## Read the data
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
 
-```{r}
-1 + 1
-```
+First download all the datasets to work in this module https://github.com/ae-tafur/data_visualization/tree/main/05_projects/excercises/data
 
-You can add options to executable code like this 
+pick up any of the datasets availables and load it. Let the folder in downloads dir. Replace "user" and "your_data" by the name of your user and file.
 
 ```{r}
-#| echo: false
-2 * 2
+
+data <- read.csv('C:\User\<username>\Downloads\data\your_data.csv')
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Now explore the data
+
+```{r}
+
+data
+
+```
+
+
+Check statistics 
+
+```{r}
+
+summary(data)
+
+```
+
+Select a plot and create one. Here is the code that we have been working on, use it.
+
+```{r}
+
+ggplot(data = DNase) +
+  aes(x = conc,
+      y = density,
+      color = Run) +
+  geom_point(alpha = .5,
+             # shape = "x",
+             stroke = 1,
+             size = 4) +
+  geom_line() +
+  labs(x = "Protein concentration",
+       y = "Optical density 400nm",
+       title = "ELISA assay for the recombinant protein DNase in rat serum",
+       color = "Assay run",
+       tag = "a.") +
+  theme_minimal()
+
+```
+
