@@ -1,0 +1,121 @@
+ID_Aislamiento,Bacteria,Origen_Muestra,Amoxicilina,Ciprofloxacina,Meropenem
+1,Klebsiella,Orina,Resistente,Sensible,Sensible
+2,Klebsiella,Orina,Sensible,Sensible,Sensible
+3,E. coli,Esputo,Resistente,Intermedio,Sensible
+4,Klebsiella,Sangre,Resistente,Intermedio,Sensible
+5,Klebsiella,Sangre,Resistente,Intermedio,Sensible
+6,E. coli,Esputo,Sensible,Sensible,Sensible
+7,E. coli,Orina,Sensible,Resistente,Sensible
+8,Staphylococcus,Herida,Intermedio,Sensible,Sensible
+9,Pseudomonas,Herida,Resistente,Intermedio,Sensible
+10,Klebsiella,Esputo,Intermedio,Sensible,Sensible
+11,Klebsiella,Sangre,Intermedio,Sensible,Sensible
+12,Pseudomonas,Herida,Resistente,Resistente,Resistente
+13,Pseudomonas,Sangre,Resistente,Intermedio,Sensible
+14,Klebsiella,Sangre,Resistente,Sensible,Sensible
+15,E. coli,Herida,Resistente,Intermedio,Sensible
+16,Pseudomonas,Esputo,Resistente,Sensible,Resistente
+17,Pseudomonas,Esputo,Resistente,Resistente,Sensible
+18,Klebsiella,Sangre,Resistente,Sensible,Resistente
+19,Staphylococcus,Herida,Resistente,Resistente,Sensible
+20,Staphylococcus,Sangre,Intermedio,Intermedio,Sensible
+21,E. coli,Orina,Resistente,Intermedio,Resistente
+22,E. coli,Herida,Sensible,Sensible,Resistente
+23,E. coli,Esputo,Sensible,Sensible,Resistente
+24,E. coli,Sangre,Sensible,Intermedio,Sensible
+25,E. coli,Herida,Resistente,Resistente,Resistente
+26,Pseudomonas,Esputo,Sensible,Sensible,Resistente
+27,E. coli,Esputo,Intermedio,Sensible,Sensible
+28,Staphylococcus,Sangre,Sensible,Resistente,Sensible
+29,Pseudomonas,Sangre,Sensible,Resistente,Sensible
+30,Staphylococcus,Herida,Resistente,Sensible,Sensible
+31,E. coli,Orina,Resistente,Sensible,Sensible
+32,Pseudomonas,Esputo,Sensible,Intermedio,Resistente
+33,Pseudomonas,Esputo,Resistente,Resistente,Sensible
+34,E. coli,Esputo,Resistente,Resistente,Resistente
+35,Pseudomonas,Sangre,Resistente,Resistente,Sensible
+36,Klebsiella,Herida,Intermedio,Resistente,Sensible
+37,E. coli,Sangre,Sensible,Sensible,Sensible
+38,Staphylococcus,Esputo,Resistente,Resistente,Sensible
+39,Pseudomonas,Esputo,Sensible,Resistente,Sensible
+40,Staphylococcus,Herida,Sensible,Sensible,Sensible
+41,Staphylococcus,Sangre,Sensible,Sensible,Sensible
+42,Pseudomonas,Sangre,Resistente,Resistente,Resistente
+43,Staphylococcus,Orina,Intermedio,Sensible,Sensible
+44,Pseudomonas,Esputo,Resistente,Resistente,Sensible
+45,Pseudomonas,Herida,Resistente,Sensible,Sensible
+46,E. coli,Sangre,Resistente,Resistente,Sensible
+47,Klebsiella,Sangre,Intermedio,Sensible,Sensible
+48,E. coli,Herida,Sensible,Resistente,Sensible
+49,Klebsiella,Orina,Resistente,Sensible,Resistente
+50,Klebsiella,Esputo,Sensible,Intermedio,Sensible
+51,Pseudomonas,Sangre,Resistente,Resistente,Sensible
+52,Staphylococcus,Orina,Resistente,Sensible,Resistente
+53,Klebsiella,Esputo,Resistente,Sensible,Sensible
+54,E. coli,Herida,Resistente,Resistente,Sensible
+55,E. coli,Sangre,Sensible,Resistente,Sensible
+56,Staphylococcus,Sangre,Sensible,Sensible,Sensible
+57,Staphylococcus,Orina,Resistente,Intermedio,Sensible
+58,Pseudomonas,Herida,Resistente,Resistente,Sensible
+59,E. coli,Esputo,Sensible,Resistente,Resistente
+60,E. coli,Orina,Resistente,Resistente,Resistente
+61,Pseudomonas,Esputo,Intermedio,Intermedio,Sensible
+62,Klebsiella,Esputo,Resistente,Resistente,Resistente
+63,Pseudomonas,Sangre,Resistente,Resistente,Sensible
+64,Pseudomonas,Esputo,Intermedio,Sensible,Sensible
+65,Staphylococcus,Herida,Sensible,Sensible,Sensible
+66,Klebsiella,Sangre,Sensible,Intermedio,Sensible
+67,Pseudomonas,Esputo,Sensible,Resistente,Sensible
+68,Staphylococcus,Orina,Sensible,Sensible,Sensible
+69,E. coli,Sangre,Resistente,Sensible,Sensible
+70,E. coli,Herida,Resistente,Sensible,Resistente
+71,Pseudomonas,Herida,Sensible,Intermedio,Sensible
+72,Pseudomonas,Esputo,Resistente,Intermedio,Resistente
+73,Pseudomonas,Orina,Resistente,Resistente,Resistente
+74,Pseudomonas,Herida,Resistente,Intermedio,Sensible
+75,Klebsiella,Herida,Resistente,Resistente,Resistente
+76,Klebsiella,Sangre,Intermedio,Intermedio,Sensible
+77,E. coli,Herida,Resistente,Intermedio,Sensible
+78,E. coli,Sangre,Resistente,Sensible,Sensible
+79,Staphylococcus,Sangre,Resistente,Sensible,Resistente
+80,E. coli,Sangre,Sensible,Sensible,Sensible
+81,Staphylococcus,Esputo,Sensible,Sensible,Sensible
+82,Klebsiella,Herida,Sensible,Intermedio,Sensible
+83,Pseudomonas,Esputo,Resistente,Resistente,Resistente
+84,E. coli,Herida,Resistente,Intermedio,Resistente
+85,E. coli,Sangre,Resistente,Sensible,Sensible
+86,Klebsiella,Herida,Resistente,Resistente,Sensible
+87,Pseudomonas,Sangre,Sensible,Sensible,Resistente
+88,Pseudomonas,Sangre,Resistente,Sensible,Sensible
+89,Pseudomonas,Orina,Intermedio,Resistente,Resistente
+90,Staphylococcus,Orina,Sensible,Intermedio,Resistente
+91,E. coli,Esputo,Resistente,Resistente,Resistente
+92,Pseudomonas,Orina,Intermedio,Sensible,Sensible
+93,Klebsiella,Esputo,Intermedio,Sensible,Resistente
+94,Staphylococcus,Sangre,Resistente,Sensible,Resistente
+95,Pseudomonas,Orina,Resistente,Resistente,Resistente
+96,Pseudomonas,Esputo,Sensible,Sensible,Resistente
+97,E. coli,Sangre,Sensible,Sensible,Resistente
+98,Staphylococcus,Sangre,Intermedio,Intermedio,Resistente
+99,Staphylococcus,Orina,Sensible,Resistente,Sensible
+100,Pseudomonas,Sangre,Intermedio,Resistente,Sensible
+101,Klebsiella,Herida,Resistente,Sensible,Resistente
+102,Staphylococcus,Herida,Resistente,Resistente,Sensible
+103,Staphylococcus,Herida,Resistente,Sensible,Sensible
+104,Pseudomonas,Herida,Sensible,Resistente,Resistente
+105,Pseudomonas,Orina,Sensible,Sensible,Sensible
+106,Staphylococcus,Esputo,Resistente,Intermedio,Resistente
+107,Klebsiella,Sangre,Sensible,Sensible,Sensible
+108,E. coli,Esputo,Resistente,Sensible,Sensible
+109,Staphylococcus,Orina,Resistente,Intermedio,Sensible
+110,E. coli,Sangre,Sensible,Sensible,Sensible
+111,Staphylococcus,Herida,Sensible,Resistente,Sensible
+112,Staphylococcus,Orina,Sensible,Intermedio,Sensible
+113,Staphylococcus,Herida,Sensible,Resistente,Sensible
+114,Pseudomonas,Sangre,Resistente,Sensible,Resistente
+115,E. coli,Herida,Sensible,Resistente,Sensible
+116,E. coli,Orina,Sensible,Intermedio,Sensible
+117,Pseudomonas,Sangre,Sensible,Intermedio,Sensible
+118,Staphylococcus,Herida,Resistente,Resistente,Resistente
+119,Staphylococcus,Herida,Sensible,Intermedio,Resistente
+120,Klebsiella,Esputo,Intermedio,Sensible,Sensible

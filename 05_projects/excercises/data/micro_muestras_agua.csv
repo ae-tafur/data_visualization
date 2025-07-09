@@ -1,0 +1,101 @@
+id_muestra,fuente,ph,coliformes_totales,e_coli,presencia_pseudomonas
+1,Río,6.38,145,64,Sí
+2,Río,7.9,172,45,Sí
+3,Río,7.95,150,43,No
+4,Planta tratamiento,8.26,167,50,No
+5,Río,6.58,142,53,No
+6,Quebrada,6.44,138,71,No
+7,Planta tratamiento,6.98,164,53,No
+8,Río,6.8,153,49,No
+9,Río,8.04,154,50,No
+10,Río,7.53,144,57,Sí
+11,Planta tratamiento,7.9,167,48,Sí
+12,Quebrada,7.07,160,42,No
+13,Quebrada,6.25,153,44,No
+14,Quebrada,6.29,146,60,No
+15,Río,6.93,140,65,No
+16,Río,6.48,143,49,No
+17,Río,8.05,154,53,Sí
+18,Río,7.5,150,51,No
+19,Quebrada,7.72,137,56,No
+20,Laguna,7.23,170,44,No
+21,Planta tratamiento,6.22,161,43,No
+22,Laguna,6.59,163,59,Sí
+23,Quebrada,7.15,153,54,No
+24,Quebrada,6.5,131,61,No
+25,Planta tratamiento,6.06,145,46,No
+26,Planta tratamiento,7.82,181,59,No
+27,Planta tratamiento,7.81,146,49,No
+28,Laguna,6.83,155,50,Sí
+29,Planta tratamiento,8.11,157,54,Sí
+30,Quebrada,7.07,134,58,Sí
+31,Río,8.16,144,58,Sí
+32,Planta tratamiento,7.64,172,55,No
+33,Quebrada,7.45,153,38,No
+34,Planta tratamiento,6.5,151,52,Sí
+35,Quebrada,7.32,173,56,No
+36,Quebrada,8.24,136,53,No
+37,Río,6.76,140,38,No
+38,Quebrada,8.18,130,48,Sí
+39,Laguna,8.27,150,47,Sí
+40,Quebrada,6.82,146,43,Sí
+41,Planta tratamiento,7.71,144,55,No
+42,Planta tratamiento,8.25,151,55,No
+43,Laguna,6.19,157,46,No
+44,Río,8.2,157,52,No
+45,Laguna,6.48,145,45,Sí
+46,Río,8.12,174,64,No
+47,Río,7.67,159,49,No
+48,Quebrada,6.86,160,58,No
+49,Río,6.38,151,59,No
+50,Quebrada,7.59,123,60,No
+51,Planta tratamiento,8.12,162,52,No
+52,Laguna,8.05,173,42,No
+53,Laguna,7.57,142,46,No
+54,Planta tratamiento,8.39,160,53,No
+55,Río,7.47,163,63,No
+56,Río,6.49,135,52,No
+57,Quebrada,7.07,128,70,No
+58,Río,6.84,190,60,No
+59,Laguna,8.48,164,51,No
+60,Planta tratamiento,6.95,149,44,No
+61,Quebrada,8.48,145,50,No
+62,Río,7.3,170,54,No
+63,Río,6.43,142,61,No
+64,Laguna,6.19,167,65,No
+65,Quebrada,6.93,144,38,No
+66,Quebrada,6.31,144,59,No
+67,Quebrada,7.59,151,60,Sí
+68,Laguna,7.03,167,51,No
+69,Río,8.48,145,52,No
+70,Laguna,8.32,148,48,No
+71,Planta tratamiento,6.37,144,46,No
+72,Río,6.99,137,45,No
+73,Quebrada,7.15,147,47,Sí
+74,Quebrada,7.4,173,61,No
+75,Planta tratamiento,7.95,181,52,No
+76,Planta tratamiento,7.22,125,64,No
+77,Quebrada,7.05,143,55,No
+78,Planta tratamiento,6.65,142,58,Sí
+79,Laguna,8.28,179,53,No
+80,Planta tratamiento,6.06,142,55,Sí
+81,Río,8.05,155,52,Sí
+82,Quebrada,6.47,160,41,No
+83,Laguna,7.71,146,42,No
+84,Laguna,6.89,131,56,No
+85,Laguna,8.44,169,44,No
+86,Río,6.31,171,75,No
+87,Quebrada,6.47,167,65,No
+88,Quebrada,8.22,139,59,No
+89,Planta tratamiento,7.46,136,63,No
+90,Laguna,6.77,129,64,No
+91,Quebrada,6.0,138,55,No
+92,Río,6.57,153,50,Sí
+93,Planta tratamiento,6.36,140,46,No
+94,Planta tratamiento,6.51,139,44,No
+95,Río,8.24,121,50,Sí
+96,Laguna,8.18,155,56,No
+97,Río,7.75,141,55,Sí
+98,Río,7.18,146,63,No
+99,Río,8.07,150,43,No
+100,Quebrada,7.24,145,42,Sí
