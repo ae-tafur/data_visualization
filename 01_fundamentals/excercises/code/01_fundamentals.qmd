@@ -16,11 +16,57 @@ When you click the **Render** button a document will be generated that includes 
 1 + 1
 ```
 
-You can add options to executable code like this 
+Creating a vector variable
 
 ```{r}
-#| echo: false
-2 * 2
+
+enfermedad <- c("ira", "eda", "eruptivas")
+frecuencia <- c(219,125,78)
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Now, we have two vectors with data representing two excel columns. We can join both to create a dataframe, like a table.
+
+```{r}
+
+mi_table <- data.frame(enfermedad, frecuencia)
+
+```
+
+
+Perfect! Now we can plot this data. Let's do it
+
+
+```{r}
+
+barplot(frecuencia)
+
+```
+
+The problem in our plot is that we are missing some important info like what means each variable, let's add it to the plot.
+
+
+```{r}
+
+
+barplot(height = mi_table$frecuencia,
+        names.arg = mi_table$enfermedad)
+
+```
+
+We can improve more this plot.
+
+```{r}
+
+
+barplot(height = mi_table$frecuencia,
+        names.arg = mi_table$enfermedad,
+        main = "Enfermedades en niños menores de 5 años",
+        xlab = "Enfermedad",
+        ylab = "Frecuencia")
+
+```
+
+
+
+
