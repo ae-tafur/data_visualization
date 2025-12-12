@@ -58,7 +58,6 @@ We can improve more this plot.
 
 ```{r}
 
-
 barplot(height = mi_table$frecuencia,
         names.arg = mi_table$enfermedad,
         main = "Enfermedades en niños menores de 5 años",

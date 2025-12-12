@@ -1,38 +1,348 @@
 ---
-title: "01_fundamentals"
-author: "Albert Tafur Rangel"
-format: html
+title: "Data analysis and visualization in R"
+subtitle: "Modulo 5 – Narrativa visual, EDA, colores y accesibilidad"
+author: "Albert Tafur Rangel, M.Sc, Ph.D."
+format:
+  html:
+    toc: true
+    theme:
+      light: flatly
+      dark: darkly
+    code-summary: "Show the code"
+    embed-resources: true
+    self-contained-math: true
 ---
 
-## Design a project
+# Design a data analysis and viz epidemiology project
 
-The purpose of this module is create a plot
+This document integrates the conceptual, methodological, and technical competencies developed throughout the previous modules of the course. Its objective is to guide the participant through a complete and reproducible workflow for epidemiological data analysis using the R ecosystem. The material covers the sequential stages of a rigorous analytic pipeline, including data importation, inspection of data structures, cleaning and harmonization, exploratory analysis, generation of summary statistics, identification of anomalies, and the construction of visualizations that support analytical reasoning and evidence-based interpretation. Emphasis is placed on the design of effective figures, the evaluation of alternative graphical encodings, and the application of accessibility principles such as perceptually uniform color palettes and color-blind-safe schemes.
+
+The dataset employed consists of records of dengue cases obtained from real epidemiological surveillance sources and complemented with simulated data to illustrate methodological challenges frequently encountered in practice, such as inconsistent formats, missing values, atypical observations, and heterogeneous spatial or temporal resolution. The database includes climatic, demographic, and geographic variables commonly used in epidemiological analyses, enabling the participant to explore associations between disease incidence and environmental factors, assess temporal patterns, and develop visual narratives that communicate findings with clarity, rigor, and interpretability. Through these exercises, participants will consolidate their proficiency in R and strengthen their ability to construct reproducible analyses aligned with best practices in public health data science.
+
+## Load the libraries
+
+The analytical workflow begins with the configuration of a coherent and reproducible working environment in R. This step ensures that all required packages are available, loaded, and functioning correctly before any data manipulation or visualization is performed. Establishing a well-defined environment is essential for ensuring consistency across analyses, facilitating collaboration, and preventing errors arising from version incompatibilities or missing dependencies.
+
+In this module, we rely on a set of packages from the *tidyverse* ecosystem to manage data structures, perform transformations, and construct statistical graphics under a unified grammar. Additional libraries support tasks related to data cleaning, date handling, accessibility evaluation, and the implementation of perceptually uniform color scales—elements fundamental for producing rigorous and reproducible epidemiological visualizations.
+
+Before loading the packages, it is important to verify that they are installed in your local R environment. If a package is missing, it can be installed using the following general syntax:
+
+::: {.callout-note appearance="minimal"}
+install.packages("package_name")
+:::
+
+For example, to install the *tidyverse*:
+
+::: {.callout-tip appearance="minimal"}
+install.packages("tidyverse")
+:::
+
+Once all required packages are installed, they can be loaded as follows:
+
+```{r}
+#| label: load libraries
+#| warning: false
+
+# Core data science ecosystem
+library(tidyverse)      # Data manipulation, summarization, ggplot2
+library(janitor)        # Data cleaning, variable standardization
+library(lubridate)      # Date and time parsing
+library(readxl)         # Importing Excel datasets
+
+# Visualization and color management
+library(colorspace)     # Perceptually uniform palettes
+library(colorblindcheck) # Accessibility diagnostics for color palettes
+library(scales)         # Formatting axes, labels, and scales
+library(patchwork)
+
+# Additional utilities
+library(knitr)          # Reporting utilities in Quarto/R Markdown
+
+```
+
+Once the environment has been initialized, participants should confirm that their working directory is correctly set and that the local structure of files is organized to support reproducibility. This includes ensuring that datasets, scripts, and outputs (figures, tables, and derived data) are stored in appropriately labeled folders. A disciplined setup at this stage provides a solid foundation for the subsequent stages of epidemiological data analysis.
+
+A well-organized directory structure is fundamental for ensuring reproducibility, transparency, and efficient collaboration in data-driven epidemiological analyses. As a recommended practice, each project should be contained within a dedicated folder named according to the study or initiative—for example, `ASIS`. Within this main directory, it is advisable to create a set of subfolders that separate code, data, and analytical outputs. A common and effective structure includes:
+
+-   `code/` — scripts used for importing, cleaning, transforming, and analyzing the data.
+
+-   `data/`
+
+    -   `raw/` — original datasets stored exactly as received, without modifications.
+
+    -   `processed/` — cleaned, harmonized, or transformed datasets generated during the analysis.
+
+-   `results/`
+
+    -   `figures/` — visualizations produced during the exploratory and inferential steps.
+
+    -   `tables/` — summary statistics, model outputs, and tabulated results.
+
+This hierarchical organization facilitates traceability, prevents accidental overwriting of original data, and supports a seamless workflow when producing reproducible reports with Quarto. It also enables clear version control and easier communication of analytic decisions during collaborative work or peer review.
+
+## Color Definitions and Principles for Consistent Use
+
+A coherent and well-documented color strategy is essential for producing visualizations that are accurate, accessible, and interpretable in epidemiological contexts. Color must not serve merely as decoration; it functions as a perceptual encoding that guides attention, emphasizes contrasts, and supports analytical reasoning. For this reason, we adopt a structured set of palettes—sequential, diverging, and qualitative—each selected according to the type and scale of the variable being represented. All palettes included are perceptually uniform or color-blind-safe, ensuring accessibility and consistency throughout the analytical workflow.
+
+### Sequential Palettes
+
+Sequential palettes are appropriate for variables measured on a continuous scale and where magnitude carries interpretive meaning, such as incidence rates, temperature, rainfall, or risk scores. These palettes encode increasing intensity through a smooth progression of luminance.
+
+::: callout-tip
+## Recommended options:
+:::
+
+```{r}
+#| label: sequential colors
+
+pal_seq_viridis <- colorspace::sequential_hcl(7, palette = "Viridis") 
+
+pal_seq_blues <- colorspace::sequential_hcl(7, palette = "Blues") 
+
+pal_seq_magma <- colorspace::sequential_hcl(7, palette = "Inferno")
+
+```
+
+**Use when:**
+
+-   Representing epidemiological counts or rates.
+
+-   Mapping gradients in heatmaps, temporal trends, or geospatial incidence surfaces.
+
+-   Emphasizing low-to-high transitions without categorical breaks.
+
+### Diverging Palettes
+
+Diverging palettes are intended for variables with a meaningful central reference point—for example, deviations from baseline, anomalies relative to average temperature, percent change, or differences before and after an intervention. These palettes emphasize both directionality and magnitude.
+
+::: callout-tip
+## Recommended options:
+:::
+
+```{r}
+#| label: divergent colors
+
+pal_div_blue_red <- colorspace::diverging_hcl(9, palette = "Blue-Red 3") 
+
+pal_div_green_brown <- colorspace::diverging_hcl(9, palette = "Green-Brown")
+
+```
+
+**Use when:**
+
+-   Comparing increases vs. decreases in incidence.
+
+-   Visualizing residuals, standardized differences, or temporal anomalies.
+
+-   Communicating values on both sides of a reference threshold.
+
+### Qualitative Palettes
+
+Qualitative palettes are suitable for categorical variables with no intrinsic order, such as regions, municipalities, vector species, or diagnostic categories. Colors must be distinguishable and carry equal perceptual weight.
+
+::: callout-tip
+## Recommended options:
+:::
+
+```{r}
+#| label: qualitative colors
+
+pal_qual_dark3 <- colorspace::qualitative_hcl(8, palette = "Dark 3") 
+
+pal_qual_set2 <- colorspace::qualitative_hcl(8, palette = "Set 2") 
+
+pal_qual_rainbow <- colorspace::qualitative_hcl(8, palette = "Harmonic")
+
+```
+
+**Use when:**
+
+-   Visualizing multiple administrative units.
+
+-   Differentiating categories with similar epidemiological importance.
+
+-   Avoiding perceptual hierarchies where no order is intended.
+
+### Special Palette for Sex-Stratified Comparisons
+
+Epidemiological analyses frequently require comparison between men and women. The use of culturally ambiguous or stereotypical colors is discouraged; instead, we apply a palette that is perceptually balanced, color-blind-safe, and maintains clear contrast between groups.
+
+::: callout-tip
+## Recommended options:
+:::
+
+```{r}
+#| label: sex colors
+
+pal_sex <- c( 
+    "Women" = "#0072B2", # Blue (accessible, stable across palettes) 
+    "Men" = "#D55E00" # Vermilion (high contrast, CVD-safe)
+ )
+
+```
+
+**Justification:**
+
+-   Both colors come from the scientific color palette of *Okabe & Ito*, designed for color-blind accessibility.
+
+-   The pair exhibits high luminance contrast, ensuring readability in lines, points, and bars.
+
+-   It avoids cultural pink/blue stereotypes while remaining intuitive in analytic presentations.
+
+### Color-Accessibility Diagnostics
+
+Ensuring that visualizations are accessible to individuals with color-vision deficiencies (CVD) is a central requirement for scientific communication. Epidemiological analyses frequently inform decision-making among diverse audiences, including public health officials, clinicians, researchers, and community stakeholders. Consequently, all visual encodings must remain interpretable under common forms of color-blindness such as protanopia, deuteranopia, and tritanopia.
+
+To support accessibility, we incorporate systematic diagnostic tools provided by the **colorblindcheck** package. This package simulates how plots appear under different CVD conditions and evaluates whether the chosen palette preserves sufficient perceptual contrast. These diagnostics should be applied before adopting any palette in recurrent analyses or final reporting.
+
+The following example shows how to evaluate the palette defined for sex-stratified comparisons:
+
+```{r}
+#| label: colorblind check
+
+# Evaluate perceptual distinguishability of the sex palette
+colorblindcheck::palette_check(pal_sex)
+
+```
+
+This function provides information on contrast ratios and potential ambiguities between colors when viewed under different color-vision profiles. A “pass” indicates that distinctions remain clear across simulated conditions.
+
+::: callout-note
+## Check
+
+Before finalizing a visualization, it is recommended to test the graph using simulated CVD transformations. The deutan`(), rotan(), and tritan()`function creates a panel showing how the plot appears under normal vision, protanopia, deuteranopia, and tritanopia, respectively.
+:::
+
+Example:
+
+```{r}
+#| label: colorblind plot check
+#| output: false
+
+set.seed(123)
+
+# Crear secuencia de fechas (12 semanas)
+fechas <- seq.Date(from = as.Date("2023-01-01"),
+                   by   = "week",
+                   length.out = 12)
+
+# Generar datos simulados de casos por sexo
+datos <- tibble(
+  fecha = rep(fechas, times = 2),
+  sexo  = rep(c("Women", "Men"), each = length(fechas)),
+  casos = c(
+    # Mujeres: tendencia suave con fluctuación
+    round(runif(12, min = 20, max = 60) + seq(0, 11)*1.5),
+    # Hombres: valores ligeramente superiores y con más variabilidad
+    round(runif(12, min = 30, max = 75) + seq(0, 11)*2)
+  )
+)
+
+p <- datos |> 
+  ggplot(aes(fecha, casos, color = sexo)) +
+  geom_line(linewidth = 1.2) +
+  scale_color_manual(values = pal_sex) +
+  labs(
+    title = "Incidencia de dengue",
+    x = "Semana epidemiológica",
+    y = "Número de casos") +
+  theme_minimal(base_size = 13)
+
+# Generate a 4-panel simulation of color-vision variations
+pal_sex_deutan <- deutan(pal_sex)
+pal_sex_protan <- protan(pal_sex)
+pal_sex_tritan <- tritan(pal_sex)
+
+# show results
+list(
+  original = pal_sex,
+  deutan = pal_sex_deutan,
+  protan = pal_sex_protan,
+  tritan = pal_sex_tritan
+)
+
+p1 <- p
+
+p2 <- p + 
+  scale_color_manual(values = pal_sex_deutan) + 
+  labs(title = "Deuteranopia")
+
+p3 <- p + 
+  scale_color_manual(values = pal_sex_protan) + 
+  labs(title = "Protanopia")
+
+p4 <- p + 
+  scale_color_manual(values = pal_sex_tritan) + 
+  labs(title = "Tritanopia")
+
+```
+
+```{r}
+#| label: colorblind plot show
+
+# Mostrar comparación
+(p1 | p2) /
+(p3 | p4)
+
+```
+
+The resulting panel helps determine whether line overlap or insufficient contrast could obscure epidemiological patterns for color-blind readers.
+
+Sequential and diverging palettes also require diagnostic evaluation, especially when used in heatmaps or geospatial gradients where subtle hue variations carry meaningful information.
+
+::: callout-important
+## Good Practices for Accessibly Designed Figures
+
+To ensure consistent accessibility across all visualizations:
+
+-   Prefer palettes derived from perceptually uniform color spaces (e.g., CIELAB, HCL).
+
+-   Avoid relying solely on color to encode meaning; incorporate line types, shapes, or annotations when appropriate.
+
+-   Ensure minimum contrast ratios between adjacent colors or classes.
+
+-   Test all finalized figures with deutan`(), rotan(), and tritan()` prior to publication or dissemination.
+
+By incorporating these diagnostics directly into the analytical workflow, the integrity and inclusiveness of data communication in epidemiological studies are strengthened, promoting clearer interpretation and equitable access to information.
+:::
 
 ## Read the data
 
+First, we need to get the data.
 
-First download all the datasets to work in this module https://github.com/ae-tafur/data_visualization/tree/main/05_projects/excercises/data
+-   We can download all the datasets to work in this module `https://github.com/ae-tafur/data_visualization/tree/main/05_projects/excercises/data`. Then, pick up any of the datasets availables and load it. Let the folder in downloads dir. Replace "user" and "your_data" by the name of your user and file.
 
-pick up any of the datasets availables and load it. Let the folder in downloads dir. Replace "user" and "your_data" by the name of your user and file.
+    ::: callout-note
+    `data <- read.csv("~/Downloads/example_data.csv")`
+    :::
+
+-   Alternatively, we can just get the data directly from the repo, just by using a url. Here, we are gonna use this option.
 
 ```{r}
+#| label: load data
 
-data <- read.csv('C:\User\<username>\Downloads\data\your_data.csv')
+url <- "https://raw.githubusercontent.com/ae-tafur/data_visualization/main"
+
+terridata <- read_delim(
+  file.path(url,"02_data_exploration/excercises/data/TerriData20570.txt"),
+  delim = "|")
+
 
 ```
 
 Now explore the data
 
 ```{r}
+#| label: explore data
 
-data
+head(terridata)
 
 ```
 
-
-Check statistics 
+Check statistics
 
 ```{r}
+#| label: check statistics
 
 summary(data)
 
@@ -41,6 +351,7 @@ summary(data)
 Select a plot and create one. Here is the code that we have been working on, use it.
 
 ```{r}
+#| label: plot
 
 ggplot(data = DNase) +
   aes(x = conc,
@@ -59,4 +370,3 @@ ggplot(data = DNase) +
   theme_minimal()
 
 ```
-
