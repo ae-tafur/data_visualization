@@ -89,7 +89,7 @@ A coherent and well-documented color strategy is essential for producing visuali
 Sequential palettes are appropriate for variables measured on a continuous scale and where magnitude carries interpretive meaning, such as incidence rates, temperature, rainfall, or risk scores. These palettes encode increasing intensity through a smooth progression of luminance.
 
 ::: callout-tip
-## Recommended options:
+**Recommended options:**
 :::
 
 ```{r}
@@ -116,7 +116,7 @@ pal_seq_magma <- colorspace::sequential_hcl(7, palette = "Inferno")
 Diverging palettes are intended for variables with a meaningful central reference point—for example, deviations from baseline, anomalies relative to average temperature, percent change, or differences before and after an intervention. These palettes emphasize both directionality and magnitude.
 
 ::: callout-tip
-## Recommended options:
+**Recommended options:**
 :::
 
 ```{r}
@@ -141,7 +141,7 @@ pal_div_green_brown <- colorspace::diverging_hcl(9, palette = "Green-Brown")
 Qualitative palettes are suitable for categorical variables with no intrinsic order, such as regions, municipalities, vector species, or diagnostic categories. Colors must be distinguishable and carry equal perceptual weight.
 
 ::: callout-tip
-## Recommended options:
+**Recommended options:**
 :::
 
 ```{r}
@@ -168,15 +168,15 @@ pal_qual_rainbow <- colorspace::qualitative_hcl(8, palette = "Harmonic")
 Epidemiological analyses frequently require comparison between men and women. The use of culturally ambiguous or stereotypical colors is discouraged; instead, we apply a palette that is perceptually balanced, color-blind-safe, and maintains clear contrast between groups.
 
 ::: callout-tip
-## Recommended options:
+**Recommended options:**
 :::
 
 ```{r}
 #| label: sex colors
 
 pal_sex <- c( 
-    "Women" = "#0072B2", # Blue (accessible, stable across palettes) 
-    "Men" = "#D55E00" # Vermilion (high contrast, CVD-safe)
+    "Mujeres" = "#A9A9A9", # Blue (accessible, stable across palettes) 
+    "Hombres" = "#708090" # Vermilion (high contrast, CVD-safe)
  )
 
 ```
@@ -208,7 +208,7 @@ colorblindcheck::palette_check(pal_sex)
 This function provides information on contrast ratios and potential ambiguities between colors when viewed under different color-vision profiles. A “pass” indicates that distinctions remain clear across simulated conditions.
 
 ::: callout-note
-## Check
+**Check**
 
 Before finalizing a visualization, it is recommended to test the graph using simulated CVD transformations. The deutan`(), rotan(), and tritan()`function creates a panel showing how the plot appears under normal vision, protanopia, deuteranopia, and tritanopia, respectively.
 :::
@@ -229,7 +229,7 @@ fechas <- seq.Date(from = as.Date("2023-01-01"),
 # Generar datos simulados de casos por sexo
 datos <- tibble(
   fecha = rep(fechas, times = 2),
-  sexo  = rep(c("Women", "Men"), each = length(fechas)),
+  sexo  = rep(c("Mujeres", "Hombres"), each = length(fechas)),
   casos = c(
     # Mujeres: tendencia suave con fluctuación
     round(runif(12, min = 20, max = 60) + seq(0, 11)*1.5),
@@ -291,7 +291,7 @@ The resulting panel helps determine whether line overlap or insufficient contras
 Sequential and diverging palettes also require diagnostic evaluation, especially when used in heatmaps or geospatial gradients where subtle hue variations carry meaningful information.
 
 ::: callout-important
-## Good Practices for Accessibly Designed Figures
+### **Good Practices for Accessibly Designed Figures**
 
 To ensure consistent accessibility across all visualizations:
 
@@ -335,38 +335,345 @@ Now explore the data
 ```{r}
 #| label: explore data
 
-head(terridata)
+terridata |> 
+  slice(1:20) |> 
+  kable(format = "html", table.attr = "class='table table-striped'")
 
 ```
+
+As you can see `Dato Numérico` have a problem, because it was imported as character but it is a number. This is due to region change, in Colombia we use . as separators for miles and , as separators for decimals. So, let's fix this.
+
+```{r}
+
+terridata <- terridata |> 
+  mutate(`Dato Numérico` = parse_number(`Dato Numérico`, 
+                                        locale = locale(decimal_mark = ",",
+                                                        grouping_mark = ".")))
+
+terridata |> 
+  slice(1:20) |> 
+  kable(format = "html", table.attr = "class='table table-striped'")
+
+```
+
+Perfect, now we can work whit this data
+
+## Basic statistics
 
 Check statistics
 
 ```{r}
 #| label: check statistics
 
-summary(data)
+summary(terridata)
 
 ```
 
-Select a plot and create one. Here is the code that we have been working on, use it.
+But this results are not useful in this context and data
+
+## Creating plots
+
+One of the main use of Terridata is to get data about demographic data. Let's get build a poblational pyramid
 
 ```{r}
-#| label: plot
+#| label: plobational pyramid
 
-ggplot(data = DNase) +
-  aes(x = conc,
-      y = density,
-      color = Run) +
-  geom_point(alpha = .5,
-             # shape = "x",
-             stroke = 1,
-             size = 4) +
-  geom_line() +
-  labs(x = "Protein concentration",
-       y = "Optical density 400nm",
-       title = "ELISA assay for the recombinant protein DNase in rat serum",
-       color = "Assay run",
-       tag = "a.") +
-  theme_minimal()
+terridata |> 
+  filter(Año == 2020 | Año == 2025 | Año == 2030) |> 
+  filter(str_starts(Indicador, "Porcentaje de población de") ) |> 
+  filter(str_starts(Subcategoría, "Población de") ) |> 
+  filter(str_detect(Fuente, "Censo 2018")) |> 
+  mutate(`Dato Numérico` = ifelse(str_detect(Indicador, "mujeres"),
+                                  -`Dato Numérico`,`Dato Numérico`),
+         Indicador = str_remove_all(
+               Indicador,
+               "[Porcentaje de población de mujeres de hombres de]"),
+        Subcategoría = str_remove_all(Subcategoría, "Población de ")) |> 
+  ggplot(aes(x = `Dato Numérico`, 
+             y = Indicador,
+             fill = str_to_title(Subcategoría),
+             color = as.character(Año),
+             group = as.character(Año))) +
+  geom_col(position = "identity") +
+  scale_fill_manual(values = pal_sex) +
+  scale_color_manual(values = c("#000000", "#9D02D7", "#F5275E")) +
+  scale_x_continuous(breaks = seq(-7,7,2), labels = abs) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(fill = "Grupo",
+       color = "Año",
+       x = "Porcentaje de la población total",
+       y = "Quinquenios de edad")
+
+
+```
+
+Another, plot can be the access to energy, water and sanitation.
+
+```{r}
+
+terridata |> 
+  filter(Indicador == "Cobertura de acueducto urbana (REC)" | 
+           Indicador == "Cobertura de acueducto rural (REC)" |
+           Indicador == "Cobertura de alcantarillado urbana (REC)" |
+           Indicador == "Cobertura de alcantarillado rural (REC)" |
+           Indicador == "Cobertura de Energía Eléctrica Urbana (Censo)" |
+           Indicador == "Cobertura de Energía Eléctrica Rural (Censo)") |>  
+  rowwise() |> 
+  mutate(Grupo = ifelse(str_detect(str_to_lower(Indicador), "urbana"),
+                        "Urbana", "Rural"),
+         Indicador = ifelse(str_detect(Indicador, "Energía"), "Energía",
+           ifelse(str_detect(Indicador, "acueducto"), 
+                  "Acueducto", "Alcantarillado"))) |> 
+  ggplot(aes(y = `Dato Numérico`, 
+             x = as.character(Año),
+             fill = Grupo)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~Indicador, ncol = 1, scales = "free_x") +
+  scale_fill_manual(values = pal_qual_set2) +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        plot.caption = element_text(hjust = 0)) +
+  labs(fill = "",
+       x = "Año",
+       y = "Cobertura (%)")
+
+```
+
+```{r}
+
+# Prepare breaks and labels safely
+x_breaks <- terridata |> 
+  filter(Indicador %in% c(
+    "Cobertura de acueducto urbana (REC)", 
+    "Cobertura de acueducto rural (REC)",
+    "Cobertura de alcantarillado urbana (REC)",
+    "Cobertura de alcantarillado rural (REC)",
+    "Cobertura de Energía Eléctrica Urbana (Censo)",
+    "Cobertura de Energía Eléctrica Rural (Censo)")) |> 
+  filter(Año >= 2018) |> 
+  distinct(Año) |> 
+  arrange(Año) |> 
+  mutate(Año_num = as.numeric(as.factor(Año)))
+
+breaks_vec  <- x_breaks$Año_num
+labels_vec <- x_breaks$Año
+
+terridata |> 
+  filter(Indicador %in% c(
+    "Cobertura de acueducto urbana (REC)", 
+    "Cobertura de acueducto rural (REC)",
+    "Cobertura de alcantarillado urbana (REC)",
+    "Cobertura de alcantarillado rural (REC)",
+    "Cobertura de Energía Eléctrica Urbana (Censo)",
+    "Cobertura de Energía Eléctrica Rural (Censo)")) |>  
+  filter(Año >= 2018) |> 
+  mutate(Grupo = ifelse(str_detect(str_to_lower(Indicador), "urbana"),
+                   "Urbana", "Rural"),
+    Indicador = case_when(str_detect(Indicador, "Energía") ~ "Energía",
+                          str_detect(Indicador, "acueducto") ~ "Acueducto",
+                          TRUE ~ "Alcantarillado"),
+    Año_num = as.numeric(as.factor(Año)),
+    offset = ifelse(Grupo == "Urbana", -0.15, 0.15),
+    x_pos = Año_num + offset) |> 
+  ggplot(aes(x = x_pos,
+             y = `Dato Numérico`,
+             color = Grupo)) +
+  geom_segment(aes(x = x_pos,
+                   xend = x_pos,
+                   y = 0,
+                   yend = `Dato Numérico`),
+               linewidth = 1.1,
+               alpha = 0.8) +
+  geom_point(size = 5) +
+  geom_text(aes(label = round(`Dato Numérico`, 1)),
+            vjust = 0.5,
+            hjust = 1.4,
+            size = 3.5,
+            fontface = "bold",
+            show.legend = FALSE) +
+  facet_wrap(~Indicador, ncol = 1, scales = "free_x") +
+  scale_color_manual(values = pal_qual_set2) +
+  scale_x_continuous(breaks = breaks_vec,
+                     labels = labels_vec) + 
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        strip.text = element_text(face = "bold"),
+        axis.title.y = element_blank(),
+        axis.text.y  = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank()) +
+  labs(color = "",
+       x = "Año",
+       title = "Cobertura por Servicios y Zona (%)")
+
+
+```
+
+```{r}
+
+terridata |> 
+  filter(str_detect(Subcategoría, "Acceso a la educación")) |> 
+  filter(!str_detect(Indicador, "superior")) |> 
+  filter(!str_ends(Indicador, "Total")) |> 
+  filter(Año >= 2016) |> 
+  rowwise() |> 
+  mutate(Grupo = ifelse(str_detect(Indicador, "bruta"), "Bruta", "Neta"),
+         Indicador = str_trim(str_sub(Indicador,19))) |> 
+  ggplot(aes(y = `Dato Numérico`, 
+             x = Año,
+             group = Indicador,
+             color = Indicador)) +
+  geom_point(size = 3, shape = 1) +
+  geom_point(size = 1.5) +
+  geom_line(size = 0.5) +
+  facet_wrap(~Grupo, scales = "free_x", ncol = 1) +
+  scale_color_manual(values = pal_qual_dark3,
+                     labels = function(x) stringr::str_to_sentence(x)) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(color = "",
+       x = "",
+       y = "Cobertura")
+
+
+```
+
+```{r}
+
+terridata |> 
+  filter(Año %in% c(2015, 2022)) |> 
+  filter(str_detect(Subcategoría, "Acceso a la educación")) |> 
+  filter(!str_detect(Indicador, "superior")) |> 
+  mutate(Grupo = ifelse(str_detect(Indicador, "bruta"), "Bruta", "Neta"),
+         Indicador = str_trim(str_sub(Indicador, 19))) |> 
+  ggplot(aes(x = Año,
+             y = `Dato Numérico`,
+             group = Indicador,
+             color = Indicador)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 3) +
+  facet_wrap(~Grupo) +
+  scale_color_manual(values = pal_qual_dark3,
+                     labels = stringr::str_to_sentence) +
+  theme_minimal() +
+  labs(x = "", 
+       y = "Cobertura", 
+       color = "")
+
+```
+
+```{r}
+
+terridata |> 
+  filter(str_detect(Subcategoría, "Acceso a la educación")) |> 
+  filter(!str_detect(Indicador, "superior")) |> 
+  filter(!str_ends(Indicador, "Total")) |> 
+  filter(Año >= 2016) |> 
+  mutate(Grupo = ifelse(str_detect(Indicador, "bruta"), "Bruta", "Neta"),
+         Indicador = str_trim(str_sub(Indicador, 19))) |> 
+  ggplot(aes(x = Año,
+             y = `Dato Numérico`,
+             fill = Indicador)) +
+  geom_area(position = "fill", alpha = 0.85) +
+  facet_wrap(~Grupo) +
+  scale_fill_manual(values = pal_qual_dark3,
+                    labels = stringr::str_to_sentence) +
+  theme_minimal() +
+  labs(x = "", 
+       y = "Proporción", 
+       fill = "")
+
+```
+
+## Dengue simulated data
+
+Let's create a simulated data
+
+```{r}
+
+set.seed(123)
+
+# Parámetros generales
+anios <- 2019:2023
+semanas <- 1:52
+
+# Base temporal
+datos <- expand.grid(Año = anios,
+                     Semana = semanas)
+
+# Componente estacional (patrón típico de dengue)
+datos <- datos |>
+  mutate(estacional = 20 + 15 * sin(2 * pi * Semana / 52),
+         ruido = rpois(n(), lambda = 5),
+         casos_base = round(estacional + ruido))
+
+# Crear brote epidémico en 2023 (semanas 20–32)
+datos <- datos |>
+  mutate(brote = ifelse(Año == 2023 & Semana %in% 20:32,
+                        rpois(n(), lambda = 40),
+                        0),
+         casos = casos_base + brote) |>
+  select(Año, Semana, casos)
+
+
+```
+
+Now, plot a endemic channel
+
+```{r}
+
+# Canal endémico a partir de años históricos
+canal_endemico <- datos |>
+  filter(Año < 2023) |>
+  group_by(Semana) |>
+  summarise(p10 = quantile(casos, 0.10),
+            p25 = quantile(casos, 0.25),
+            p50 = quantile(casos, 0.50),
+            p75 = quantile(casos, 0.75),
+            p90 = quantile(casos, 0.90),
+            .groups = "drop")
+
+casos_2023 <- datos |> 
+  filter(Año == 2023)
+
+# Datos del año de evaluación
+casos_2023 <- datos |>
+  filter(Año == 2023)
+
+canal_endemico |> 
+  ggplot(aes(x = Semana)) +
+  # Zona Epidemia / Brote
+  geom_area(aes(y = p90, fill = "Brote"), alpha = 0.8) +
+  # Zona Alerta
+  geom_area(aes(y = p75, fill = "Alerta"), alpha = 0.8) +
+  # Zona Seguridad
+  geom_area(aes(y = p25, fill = "Seguridad"), alpha = 0.8) +
+  # Zona Éxito
+  geom_area(aes(y = p10, fill = "Éxito"), alpha = 0.8) +
+  # Percentil central (mediana)
+  geom_line(aes(y = p50), color = "black", linewidth = 1) +
+  # Casos observados (2023)
+  geom_point(data = casos_2023,
+             aes(x = Semana, y = casos),
+             color = "#D55E00",
+             size = 2.2) +
+  scale_fill_manual(values = c("Éxito" = "#E5F5E0",
+                               "Seguridad" = "#A1D99B",
+                               "Alerta" = "#FCBBA1",
+                               "Brote" = "#CB181D")) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom",
+        panel.grid.minor = element_blank()) +
+  labs(
+    title = "Canal endémico de dengue (casos semanales)",
+    subtitle = "Construido con percentiles históricos (2019–2022)",
+    x = "Semana epidemiológica",
+    y = "Número de casos",
+    fill = "Zona epidemiológica",
+    caption = "Puntos: casos observados en 2023 (datos simulados)")
+
 
 ```
